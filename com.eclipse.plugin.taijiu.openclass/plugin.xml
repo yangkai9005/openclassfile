@@ -32,6 +32,35 @@
          </action>
       </objectContribution>
       
+      <objectContribution
+            objectClass="org.eclipse.core.resources.IFile"
+            id="com.taijiu.eclipse.plugin.findclass.file">
+         <menu
+               label="文件操作"
+               path="additions"
+               id="com.taijiu.eclipse.plugin.findclass.menu1">
+               <separator
+                  name="one">
+            </separator>
+         </menu>
+         <action
+               label="复制到"
+               icon="icons/copy.png"
+               class="com.taijiu.eclipse.plugin.findclass.actions.FindFile"
+               menubarPath="com.taijiu.eclipse.plugin.findclass.menu1/one"
+               enablesFor="1"
+               id="com.taijiu.eclipse.plugin.findclass.copy">
+         </action>
+         <action
+               label="打开"
+               icon="icons/open.png"
+               class="com.taijiu.eclipse.plugin.findclass.actions.FindFile"
+               menubarPath="com.taijiu.eclipse.plugin.findclass.menu1/one"
+               enablesFor="1"
+               id="com.taijiu.eclipse.plugin.findclass.open">
+         </action>
+      </objectContribution>
+      
    </extension>
 
 </plugin>
