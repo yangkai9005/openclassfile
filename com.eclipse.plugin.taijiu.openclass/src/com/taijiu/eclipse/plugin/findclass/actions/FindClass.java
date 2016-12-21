@@ -53,7 +53,7 @@ public class FindClass implements IObjectActionDelegate {
 	 */
 	public void run(IAction action) {
 		if("".equals(classFilePath)){
-			MessageDialog.openError(shell, TITLE, "��ѡ��java�ļ�!");
+			MessageDialog.openError(shell, TITLE, "请选择java文件！");
 			return;
 		}
 		String command = "explorer.exe /SELECT,";
