@@ -1,37 +1,22 @@
 package com.taijiu.eclipse.plugin.findclass.actions;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.jdt.core.IPackageDeclaration;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.internal.core.CompilationUnit;
-import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.TreeSelection;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IActionDelegate;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.internal.ObjectPluginAction;
 
 
 
@@ -41,6 +26,13 @@ public class FindClass implements IObjectActionDelegate {
 	private String classFilePath = "";
 	private static final String TITLE = "Class File Dialog";
 	private static final String READ_ME = "readme.txt";
+	private static final List<String> filterFileName;
+	static{
+		filterFileName = new ArrayList<String>();
+		filterFileName.add("src");
+		filterFileName.add(".settings");
+		filterFileName.add(".metadata");
+	}
 	
 	/**
 	 * Constructor for Action1.
@@ -61,7 +53,7 @@ public class FindClass implements IObjectActionDelegate {
 	 */
 	public void run(IAction action) {
 		if("".equals(classFilePath)){
-			MessageDialog.openError(shell, TITLE, "请选择java文件!");
+			MessageDialog.openError(shell, TITLE, "锟斤拷选锟斤拷java锟侥硷拷!");
 			return;
 		}
 		String command = "explorer.exe /SELECT,";
@@ -72,16 +64,6 @@ public class FindClass implements IObjectActionDelegate {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		/*DirectoryDialog dialog = new DirectoryDialog(shell, SWT.NULL);
-		dialog.setFilterPath(classFilePath);
-        String path = dialog.open();
-        if (path != null) {
-        	if(MessageDialog.openConfirm(shell, TITLE, "是否将 \r\n"+classFilePath+"     \r\n导出到 \r\n"+path)){
-        		fileCopy(classFilePath, path);
-        		addReadMe(path, classFileAbsPath);
-        	}
-        	
-        }*/
 	}
 
 	/**
@@ -121,10 +103,13 @@ public class FindClass implements IObjectActionDelegate {
 		String findFilePath = null;
 		if(listFile != null){
 			for(File file : listFile){
-				if(file.isDirectory() && !file.getName().endsWith("src")){
+				if(file.isDirectory() && !filterFileName.contains(file.getName())){
 					File classPath = new File(file.getAbsolutePath()+filePath);
 					if(!classPath.exists()){
 						findFilePath = getClassFilePath(file.getAbsolutePath(), filePath);
+						if(findFilePath != null){
+							return findFilePath;
+						}
 					}else{
 						return file.getAbsolutePath();
 					}
@@ -133,64 +118,4 @@ public class FindClass implements IObjectActionDelegate {
 		}
 		return findFilePath;
 	}
-	
-	
-	/*private void fileCopy(String from,String to){
-		BufferedOutputStream bw = null;
-		BufferedInputStream br = null;
-		File fromFile = new File(from);
-		File toFile = new File(to + File.separator + fromFile.getName());
-		try {
-			if(!toFile.exists()){
-				toFile.createNewFile();
-			}
-			br = new BufferedInputStream(new FileInputStream(fromFile));
-			bw = new BufferedOutputStream(new FileOutputStream(toFile));
-			byte[] b = new byte[1024];
-			while(br.read(b) != -1 ){
-				bw.write(b);
-			}
-			bw.flush();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}finally{
-			try {
-				if(br != null){
-					br.close();
-				}
-				if(bw != null){
-					bw.close();
-				}
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-	}*/
-	
-	/*private void addReadMe(String path,String content){
-		BufferedWriter bw = null;
-		File readMe = new File(path+File.separator+READ_ME);
-		try {
-			if(!readMe.exists()){
-				readMe.createNewFile();
-			}
-			bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(readMe, true)));
-			bw.write(content+System.getProperty("line.separator"));
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}finally{
-			try {
-				if(bw != null){
-					bw.close();
-				}
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-	}*/
 }
