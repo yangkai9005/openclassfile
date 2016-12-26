@@ -33,13 +33,6 @@ public class FindClass implements IObjectActionDelegate {
 	private static final String ERROR = "请选择java文件";
 	private static final String COPY_ID = "com.taijiu.eclipse.plugin.findclass.copy";
 	private static final String OPEN_ID = "com.taijiu.eclipse.plugin.findclass.open";
-	private static final List<String> filterFileName;
-	static{
-		filterFileName = new ArrayList<String>();
-		filterFileName.add("src");
-		filterFileName.add(".settings");
-		filterFileName.add(".metadata");
-	}
 	
 	/**
 	 * Constructor for Action1.
@@ -128,7 +121,7 @@ public class FindClass implements IObjectActionDelegate {
 						if(javaName.endsWith(".java")){
 							className = javaName.replaceAll(".java", ".class");
 						}
-						String classPath = getClassFilePath(projectPath, packagePath+File.separator+className);
+						String classPath = Utils.getClassFilePath(projectPath, packagePath+File.separator+className);
 						classFilePath = classPath + packagePath + File.separator + className;
 						classDestPath = resouce.getProject().getName() + packagePath;
 					}
@@ -139,25 +132,9 @@ public class FindClass implements IObjectActionDelegate {
 		}
 	}
 	
-	private static String getClassFilePath(String projectPath,String filePath){
-		File projectFile = new File(projectPath);
-		File[] listFile = projectFile.listFiles();
-		String findFilePath = null;
-		if(listFile != null){
-			for(File file : listFile){
-				if(file.isDirectory() && !filterFileName.contains(file.getName())){
-					File classPath = new File(file.getAbsolutePath()+filePath);
-					if(!classPath.exists()){
-						findFilePath = getClassFilePath(file.getAbsolutePath(), filePath);
-						if(findFilePath != null){
-							return findFilePath;
-						}
-					}else{
-						return file.getAbsolutePath();
-					}
-				}
-			}
-		}
-		return findFilePath;
+	
+	public static void main(String[] args) {
+		String path = Utils.getClassFilePath("E:\\NG工作\\NGcode\\scts6.7.2\\scts.channel\\", "\\NgPolicyChannelMapper.xml");
+		System.out.println(path.substring(path.indexOf("target\\classes")+"target\\classes".length()));
 	}
 }

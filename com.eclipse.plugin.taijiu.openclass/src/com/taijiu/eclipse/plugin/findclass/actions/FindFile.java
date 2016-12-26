@@ -27,6 +27,7 @@ public class FindFile implements IObjectActionDelegate {
 	private static final String ERROR = "请选择文件";
 	private static final String COPY_ID = "com.taijiu.eclipse.plugin.findclass.copy";
 	private static final String OPEN_ID = "com.taijiu.eclipse.plugin.findclass.open";
+	private static final String[] BUILD_PATHS = new String[]{"target\\classes","target\\test-classes","build\\classes"}; 
 	
 	/**
 	 * Constructor for Action1.
@@ -102,8 +103,26 @@ public class FindFile implements IObjectActionDelegate {
 			TreeSelection treeSelection = (TreeSelection)selection;
 			Object firstEle = treeSelection.getFirstElement();
 			if(firstEle != null && firstEle instanceof org.eclipse.core.internal.resources.File){
-				File selectFile = (File)firstEle;
+				org.eclipse.core.internal.resources.File selectFile = (org.eclipse.core.internal.resources.File)firstEle;
+				String eleName = selectFile.getName();
+				if(eleName.endsWith(".java")){
+					eleName = eleName.replaceAll(".java", ".class");
+				}
+				String classPath = Utils.getClassFilePath(selectFile.getProject().getLocation().makeAbsolute().toOSString(), File.separator + eleName);
+				filePath = classPath + File.separator + eleName;
+				String pkgPath = getDestPath(classPath);
+				destPath = selectFile.getProject().getName() + pkgPath + File.separator;
 			}
 		}
 	}
+	private static String getDestPath(String filePath){
+		String tempPath = filePath;
+		for(String str : BUILD_PATHS){
+			if(tempPath.contains(str)){
+				tempPath = tempPath.substring(tempPath.indexOf(str)+str.length());
+			}
+		}
+		return tempPath;
+	}
+	
 }
