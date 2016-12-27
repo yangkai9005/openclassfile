@@ -57,8 +57,6 @@ public class FindFile implements IObjectActionDelegate {
 		if(OPEN_ID.equals(action.getId())){
 			openFile();
 		}
-		
-		
 	}
 	
 	private void openFile(){

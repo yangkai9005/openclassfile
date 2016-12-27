@@ -85,7 +85,7 @@ public class FindClass implements IObjectActionDelegate {
         	if(MessageDialog.openConfirm(shell, TITLE, "是否将 \r\n"+classFilePath+"     \r\n复制到\r\n"+path)){
         		try {
         			File fromFile = new File(classFilePath);
-        			File toFile = new File(path + File.separator +  classDestPath + fromFile.getName());
+        			File toFile = new File(path + File.separator +  classDestPath  +File.separator+ fromFile.getName());
         			if(!toFile.exists()){
         				Files.createParentDirs(toFile);
         				toFile.createNewFile();
