@@ -1,0 +1,3 @@
+# openclassfile
+eclipse plugin 右键java文件打开class文件或复制class文件到指定目录
+效果图看文件img/pluginsview.png
